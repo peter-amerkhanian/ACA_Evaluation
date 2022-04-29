@@ -1,0 +1,35 @@
+---
+title: "Quant Project"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+install.packages("equatiomatic")
+install.packages("foreign")
+```
+
+```{r}
+library(foreign)
+library(equatiomatic)
+aca<-read.csv("data_with_dummies_new.csv")
+```
+
+Difference in difference analysis: Regress the dummy variable for whether someone is under 26 and the dummy variable for pre- and post-ACA enactment on health insurance coverage with an interaction variable. There is a significant interaction effect for people under 26 after ACA, meaning that people under 26 were differentially affected by the policy change.
+```{r}
+reg1<- lm(any_insurance~under_26+post_aca+ post_aca*under_26, aca)
+summary(reg1)
+```
+
+Here we regress region of the US and the pre- and post-ACA enactment dummy variable on health insurance coverage with interaction variables. We see that after the ACA, the only region that had a significantly different outcome than the reference region of the West was that there was more of an increase in coverage post-ACA in the Northeast.
+```{r}
+reg2<- lm(any_insurance~post_aca*Midwest+Northeast*post_aca+post_aca*South, aca)
+summary(reg2)
+```
+
+Here we regress race and the pre- and post-ACA enactment dummy variable on health insurance coverage with interaction variables. We see that after the ACA, Hispanic and Other race/Nonhispanic had a greater increase in coverage relative to the white reference group. There was not a significant interaction for Black individuals relative to white individuals. 
+```{r}
+reg3<- lm(any_insurance~post_aca*Black..non.Hispanic+Hispanic*post_aca+post_aca*Other.race..non.Hispanic, aca)
+summary(reg3)
+```
+
